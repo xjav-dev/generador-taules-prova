@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.DS_Store
+*.log
+
+# Mai no s'han de desar fulls de càlcul al repositori, ni de prova.
+*.xlsx
+*.xlsm
+*.xls
+*.ods
+*.csv
+*.tsv
+*.zip
