@@ -1,0 +1,23 @@
+name: Proves
+on:
+  push:
+    branches-ignore: [gh-pages]
+permissions:
+  contents: read
+jobs:
+  proves:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        navegador: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-save playwright axe-core
+      - run: npx playwright install --with-deps ${{ matrix.navegador }}
+      - run: npm run proves
+        env:
+          NAVEGADOR: ${{ matrix.navegador }}

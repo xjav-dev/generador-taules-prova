@@ -67,7 +67,7 @@ En carregar, de l'original només es conserva el **perfil**. Les files es descar
 | Tipus | Com es genera | Exemple inventat |
 | --- | --- | --- |
 | Nom, cognoms, nom complet | Llista inclosa a l'aplicació | Marta Soler |
-| DNI, NIE | Número aleatori amb lletra vàlida | 48213907L |
+| DNI, NIE | Número aleatori amb lletra vàlida | 12345678A |
 | Correu | A partir del nom de la fila, a `example.org` | marta.soler@example.org |
 | Telèfon | Mateix patró i prefix mòbil o fix | 687 201 943 |
 | IBAN | Mateix país, amb control vàlid | ES47 0182… |
@@ -130,22 +130,22 @@ En carregar, de l'original només es conserva el **perfil**. Les files es descar
 
 ## 10. Criteris d'acceptació
 
-- [ ] Del carregar al resultat no cal cap decisió.
-- [ ] L'original no es mostra en cap moment.
-- [ ] Cap valor de les files originals apareix al resultat, excepte les categories admeses.
-- [ ] Un valor que apareix menys de 5 vegades no apareix al resultat.
-- [ ] Un valor extrem no apareix al resultat ni en defineix el rang.
+- [x] Del carregar al resultat no cal cap decisió.
+- [x] L'original no es mostra en cap moment.
+- [x] Cap valor de les files originals apareix al resultat, excepte les categories admeses.
+- [x] Un valor que apareix menys de 5 vegades no apareix al resultat.
+- [x] Un valor extrem no apareix al resultat ni en defineix el rang.
 - [ ] Els nombres i les dates es poden ordenar i sumar a Excel com a l'original.
-- [ ] Els DNI, NIE i IBAN generats superen la validació del dígit de control.
-- [ ] Un codi postal generat sempre té cinc xifres, també amb un zero inicial.
-- [ ] Una columna única continua sent única.
-- [ ] Cada text lliure generat té el mateix nombre de paraules que l'original.
-- [ ] Dos textos generats no comencen sempre per la mateixa paraula.
-- [ ] Dues pestanyes relacionades es poden encreuar al resultat.
-- [ ] La segona passada canvia només la columna indicada.
-- [ ] Un text que comença per `=` no s'executa.
-- [ ] Funciona sense connexió, sense cap petició de xarxa.
-- [ ] 50.000 × 100 dins del temps previst.
+- [x] Els DNI, NIE i IBAN generats superen la validació del dígit de control.
+- [x] Un codi postal generat sempre té cinc xifres, també amb un zero inicial.
+- [x] Una columna única continua sent única.
+- [x] Cada text lliure generat té el mateix nombre de paraules que l'original.
+- [x] Dos textos generats no comencen sempre per la mateixa paraula.
+- [x] Dues pestanyes relacionades es poden encreuar al resultat.
+- [x] La segona passada canvia només la columna indicada.
+- [x] Un text que comença per `=` no s'executa.
+- [x] Funciona sense connexió, sense cap petició de xarxa.
+- [x] 50.000 × 100 dins del temps previst.
 - [ ] Funciona als quatre navegadors.
 
 ## 11. Decisions de disseny

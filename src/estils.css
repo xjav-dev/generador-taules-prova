@@ -1,0 +1,54 @@
+:root {
+  --paper: #eef1f6; --full: #ffffff; --tinta: #1a2238; --suau: #4f5a72; --reixa: #c9d1de;
+  --marcador: #ffe873; --marcador-tinta: #1a2238; --accio: #1a2238; --accio-text: #ffffff; --malament: #a3211a;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #141a2b; --full: #1d2439; --tinta: #e9edf7; --suau: #aab4c9; --reixa: #39435c;
+    --marcador: #f2d94e; --marcador-tinta: #141a2b; --accio: #e9edf7; --accio-text: #141a2b; --malament: #ff9c94;
+  }
+}
+* { box-sizing: border-box; }
+html { background: var(--paper); }
+body { margin: 0 auto; padding: 28px 24px 48px; max-width: 1400px; color: var(--tinta); background: var(--paper); font: 16px/1.5 var(--sans); }
+h1 { font: 600 2rem/1.2 var(--serif); margin: 0 0 4px; }
+p { margin: 0 0 12px; max-width: 72ch; }
+.avis-local { color: var(--suau); margin: 0 0 24px; }
+.contingut:focus { outline: none; }
+button.boto { font: inherit; padding: 9px 16px; border: 2px solid var(--accio); background: var(--accio); color: var(--accio-text); cursor: pointer; }
+button.boto.secundari { background: transparent; color: var(--tinta); }
+:is(button, input, select, summary):focus-visible { outline: 3px solid var(--marcador); outline-offset: 2px; box-shadow: 0 0 0 2px var(--tinta); }
+input[type="text"], select { font: inherit; font-size: .875rem; padding: 3px 5px; width: 100%; border: 1px solid var(--suau); background: var(--full); color: var(--tinta); }
+.error { color: var(--malament); font-weight: 600; }
+.invisible { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+[hidden] { display: none !important; }
+
+.zona { display: block; padding: 88px 24px; background: var(--full); border: 2px dashed var(--suau); text-align: center; cursor: pointer; font: 1.5rem var(--serif); }
+.zona.actiu { background: var(--marcador); color: var(--marcador-tinta); border-style: solid; }
+.zona:focus-within { outline: 3px solid var(--marcador); box-shadow: 0 0 0 2px var(--tinta); }
+.zona small { display: block; margin-top: 8px; font: 1rem var(--sans); }
+.explicacio { margin-top: 16px; color: var(--suau); }
+
+.barra { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 14px; }
+.barra .resum { flex: 1; min-width: 220px; max-width: none; margin: 0; font: 1.15rem var(--serif); }
+.pestanyes { display: flex; flex-wrap: wrap; gap: 0; margin: 0; padding: 0; list-style: none; border-bottom: 2px solid var(--tinta); }
+.pestanyes button { font: inherit; padding: 6px 14px; border: 0; background: none; color: var(--tinta); cursor: pointer; }
+.pestanyes button[aria-pressed="true"] { background: var(--marcador); color: var(--marcador-tinta); font-weight: 600; }
+.marc { overflow: auto; max-height: 68vh; background: var(--full); border: 1px solid var(--reixa); }
+table { border-collapse: separate; border-spacing: 0; font-size: .875rem; white-space: nowrap; }
+th, td { padding: 4px 9px; border-right: 1px solid var(--reixa); border-bottom: 1px solid var(--reixa); text-align: left; max-width: 300px; overflow: hidden; text-overflow: ellipsis; }
+thead th { position: sticky; top: 0; z-index: 1; min-width: 150px; padding: 7px; font-weight: 400; background: var(--paper); vertical-align: top; }
+thead th input, thead th select { display: block; }
+thead th input { font-weight: 600; margin-bottom: 4px; }
+th.fora, td.fora { opacity: .5; }
+.nota { color: var(--suau); font-size: .875rem; margin: 10px 0; }
+details { margin-top: 16px; max-width: 80ch; }
+summary { cursor: pointer; font-weight: 600; }
+details ul { margin: 8px 0; padding-left: 20px; }
+.ocupat { position: fixed; left: 0; right: 0; bottom: 0; z-index: 5; display: flex; align-items: center; gap: 16px; padding: 14px 24px; background: var(--accio); color: var(--accio-text); }
+.ocupat p { margin: 0; }
+.ocupat progress { flex: 1; }
+.peu { margin-top: 32px; color: var(--suau); font-size: .875rem; }
