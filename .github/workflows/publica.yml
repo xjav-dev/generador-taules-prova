@@ -1,7 +1,6 @@
 name: Publica
 on:
-  push:
-    tags: ['v*']
+  workflow_dispatch:
 permissions:
   contents: write
 jobs:
@@ -17,6 +16,8 @@ jobs:
       - run: npm run proves
       - run: sha256sum generador-taules-prova.html > generador-taules-prova.html.sha256
         working-directory: dist
-      - run: gh release create "$GITHUB_REF_NAME" dist/generador-taules-prova.html dist/generador-taules-prova.html.sha256 --title "$GITHUB_REF_NAME" --notes "Baixa generador-taules-prova.html i obre'l amb doble clic. Consulta MANUAL.md."
+      - run: |
+          VERSIO="v$(node -p "require('./package.json').version")"
+          gh release create "$VERSIO" dist/generador-taules-prova.html dist/generador-taules-prova.html.sha256 --target "$GITHUB_SHA" --title "$VERSIO" --notes "Baixa generador-taules-prova.html i obre'l amb doble clic. Consulta MANUAL.md."
         env:
           GH_TOKEN: ${{ github.token }}

@@ -162,7 +162,7 @@ Conseqüències: una edat i un curs poden no encaixar entre si.
 
 ### DD-103 · 2026-11-09 · Publicació
 Context: cal poder baixar l'aplicació sense conèixer GitHub.
-Decisió: en crear una etiqueta `v*`, una acció executa les proves i publica una *release* amb l'HTML i la seva suma SHA-256. `main` és la versió bona.
+Decisió: una acció que s'inicia a mà des de la pestanya Actions executa les proves i publica una *release* amb l'HTML, la seva suma SHA-256 i l'etiqueta de la versió. `main` és la versió bona.
 Conseqüències: la publicació falla si no passen les proves.
 
 ## 12. Fases
