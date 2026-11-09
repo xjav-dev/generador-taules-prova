@@ -131,6 +131,28 @@ t.igual(sortidaCsv[0], ['Nom', 'Import', 'Data', 'Observacions'], 'títols del c
 t.comprova(sortidaCsv.slice(1).every((f) => /^\d+,\d{2}$/.test(f[1]) && /^\d{2}\/\d{2}\/\d{4}$/.test(f[2])), 'mateix format de text', sortidaCsv[1]);
 t.comprova(!sortidaCsv.flat().some((x) => /Anna|Joan|Pere|privat/.test(x)), 'sense valors originals');
 
+// R15: diverses columnes del mateix tipus a la fila
+const titolsR15 = ['Nom', 'Nom pare', 'Correu alumne', 'Correu pare', 'Correu mare', 'Correu contacte', 'Correu mixt', 'Telèfon 1', 'Telèfon 2'];
+const filesR15 = Array.from({ length: 30 }, (_, i) => celles(i + 2, ['Alumna Secreta ' + i, 'Pare Secret ' + i, 'a' + i + '@escola.cat', 'p' + i + '@escola.cat', 'm' + i + '@escola.cat', 'p' + i + '@escola.cat', (i % 2 ? 'a' + i : 'x' + i) + '@escola.cat', '6000001' + String(10 + i), '6000002' + String(10 + i)]));
+const llibreR15 = creaXlsx({ fulls: [{ nom: 'A', xml: '<worksheet><sheetData>' + celles(1, titolsR15) + filesR15.join('') + '</sheetData></worksheet>' }] });
+GTP.motor.executa('obre', { bytes: llibreR15.buffer.slice(llibreR15.byteOffset, llibreR15.byteOffset + llibreR15.byteLength), nom: 'a.xlsx' });
+const filesS = GTP.lector.llegeix(GTP.motor.executa('exporta').fitxer.bytes, 'a.xlsx').fulls[0].files.slice(1);
+t.comprova(filesS.every((f) => new Set([f[2], f[3], f[4]]).size === 3), 'tres correus diferents a cada fila', filesS[0]);
+t.comprova(filesS.every((f) => f[5] === f[3]), 'el correu que era igual a l\'original continua sent igual');
+t.comprova(filesS.every((f, i) => f[0] !== f[1]), 'els noms de dues persones són diferents');
+t.comprova(filesS.every((f) => f[7] !== f[8]), 'dos telèfons diferents');
+t.comprova(filesS.every((f) => f[2].startsWith(slug(f[0].split(' ')[0]) + '.' + slug(f[0].split(' ')[1]))), 'el primer correu surt del primer nom');
+t.comprova(filesS.every((f) => f[3].startsWith(slug(f[1].split(' ')[0]) + '.' + slug(f[1].split(' ')[1]))), 'el segon correu surt del segon nom');
+const perfilR15 = JSON.stringify(GTP.motor.executa('canvia', { full: 0, columna: 6, canvi: { titol: 'Mixt' } }));
+t.comprova(!/Secret|escola/.test(perfilR15.replace(/"titol":"[^"]*"/g, '')), 'cap valor original a la vista');
+// Ordre de files no alterat: la coincidència es marca per posició.
+const unsol = GTP.lector.llegeix(GTP.motor.executa('exporta').fitxer.bytes, 'a.xlsx').fulls[0].files.slice(1);
+const iguals = unsol.filter((f) => f[6] === f[2]).length;
+t.igual(iguals, 15, 'només coincideixen les files que coincidien a l\'original');
+GTP.motor.executa('canvia', { full: 0, columna: 7, canvi: { tipus: 'correu' } });
+const ambNou = GTP.lector.llegeix(GTP.motor.executa('exporta').fitxer.bytes, 'a.xlsx').fulls[0].files.slice(1);
+t.comprova(ambNou.every((f) => new Set([f[2], f[3], f[4], f[7]]).size === 4), 'una columna canviada a correu també és diferent', ambNou[0]);
+
 // Un format General (LibreOffice el desa com a format propi) no ha de convertir dates en nombres.
 const ambGeneral = creaXlsx({
   estils: '<styleSheet><numFmts count="1"><numFmt numFmtId="164" formatCode="General"/></numFmts><cellXfs><xf numFmtId="164"/><xf numFmtId="14"/></cellXfs></styleSheet>',

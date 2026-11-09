@@ -1,6 +1,6 @@
 {
   "name": "generador-taules-prova",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Crea taules de prova amb la forma d'un full de càlcul real i dades totalment inventades, sense que res surti del navegador.",
   "license": "EUPL-1.2",

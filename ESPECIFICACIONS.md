@@ -110,6 +110,8 @@ En carregar, de l'original només es conserva el **perfil**. Les files es descar
 
 **R14 · Text lliure.** Cada text se substitueix per lorem ipsum amb exactament el mateix nombre de paraules que l'original. El fragment comença en una paraula aleatòria d'un passatge llarg, i continua pel principi si arriba al final, perquè no es repeteixi sempre el mateix text.
 
+**R15 · Diverses persones a la fila.** Si una fila té diverses columnes del mateix tipus (tres correus, dos noms), cada una correspon a una persona inventada diferent. Només coincideixen a les files on coincidien a l'original, i dues columnes pràcticament iguals es tracten com la mateixa persona. La primera columna de cada tipus es correspon amb la primera de les altres; es fa igual amb les següents.
+
 ## 8. Requisits no funcionals
 
 - **Sense xarxa.** Política de seguretat que bloqueja tota connexió.
@@ -139,6 +141,7 @@ En carregar, de l'original només es conserva el **perfil**. Les files es descar
 - [x] Els DNI, NIE i IBAN generats superen la validació del dígit de control.
 - [x] Un codi postal generat sempre té cinc xifres, també amb un zero inicial.
 - [x] Una columna única continua sent única.
+- [x] Tres correus diferents a l'original surten diferents a cada fila, i els que coincidien continuen coincidint.
 - [x] Cada text lliure generat té el mateix nombre de paraules que l'original.
 - [x] Dos textos generats no comencen sempre per la mateixa paraula.
 - [x] Dues pestanyes relacionades es poden encreuar al resultat.

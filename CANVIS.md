@@ -4,6 +4,11 @@ Format basat en [Keep a Changelog](https://keepachangelog.com/ca/1.1.0/), amb ve
 
 ## [Sense publicar]
 
+## [1.0.1] · 2026-11-09
+
+### Corregit
+- Diverses columnes del mateix tipus a la fila (per exemple, tres correus o dos noms) ja no surten amb el mateix valor. Només coincideixen a les files on coincidien a l'original.
+
 ## [1.0.0] · 2026-11-09
 
 ### Afegit

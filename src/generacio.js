@@ -52,10 +52,15 @@
     };
   }
 
-  function persona(estat, univers, i) {
-    var p = univers.persones.get(i);
-    if (!p) { p = creaPersona(estat, univers); univers.persones.set(i, p); }
+  function persona(estat, univers, i, rol) {
+    var clau = i + ':' + (rol || 0), p = univers.persones.get(clau);
+    if (!p) { p = creaPersona(estat, univers); univers.persones.set(clau, p); }
     return p;
+  }
+
+  function usatsCompartits(estat, tipus) {
+    if (!estat.usats.has(tipus)) estat.usats.set(tipus, new Set());
+    return estat.usats.get(tipus);
   }
 
   function generaDni(a, col) {
@@ -130,23 +135,32 @@
     if (!memoria) { memoria = { valors: new Map(), usats: new Set() }; estat.memoria.set(arrel.clau, memoria); }
     var distints = colArrel.numDistints;
     var limita = distints > 0 && distints < univers.mida && !SENSE_REINTENT[col.tipus];
-    return full.assignacio.map(function (indexPersona) {
+    // Els identificadors no es poden repetir entre columnes: tres correus són tres correus.
+    var usats = SEMPRE_UNICS[col.tipus] ? usatsCompartits(estat, col.tipus) : memoria.usats;
+    var valors = full.assignacio.map(function (indexPersona) {
       if (a.real() < col.buides) return null;
       var clau = limita ? indexPersona % distints : indexPersona;
       if (memoria.valors.has(clau)) return memoria.valors.get(clau);
-      var p = persona(estat, univers, indexPersona), valor = null, intent = 0;
+      var p = persona(estat, univers, indexPersona, colArrel.rol), valor = null, intent = 0;
       for (; intent < MAX_INTENTS; intent++) {
         valor = generaLligat(estat, col, p, intent);
         if (SENSE_REINTENT[col.tipus]) break;
         var coincideix = col.empremtes && col.empremtes.has(normalitzaEmpremta(estat.perfil, valor));
-        var repetit = (SEMPRE_UNICS[col.tipus] || col.unic) && memoria.usats.has(valor);
+        var repetit = (SEMPRE_UNICS[col.tipus] || col.unic) && usats.has(valor);
         if (!coincideix && !repetit) break;
       }
-      if (intent === MAX_INTENTS && (SEMPRE_UNICS[col.tipus] || col.unic) && typeof valor === 'string') valor = valor + ' ' + (memoria.usats.size + 1);
-      memoria.usats.add(valor);
+      if (intent === MAX_INTENTS && (SEMPRE_UNICS[col.tipus] || col.unic) && typeof valor === 'string') valor = valor + ' ' + (usats.size + 1);
+      usats.add(valor);
       memoria.valors.set(clau, valor);
       return valor;
     });
+    if (col.igualA) {
+      valors = valors.map(function (valor, r) {
+        var origen = col.igualA[r];
+        return origen >= 0 && full.valors[origen] ? full.valors[origen][r] : valor;
+      });
+    }
+    return valors;
   }
 
   function textData(data, mascara, teHora) {
@@ -277,6 +291,7 @@
 
   function omple(estat) {
     estat.memoria = new Map();
+    estat.usats = new Map();
     estat.perfil.fulls.forEach(function (fullPerfil, f) {
       assignaPersones(estat, f);
       estat.fulls[f].valors = [];
@@ -285,7 +300,7 @@
   }
 
   function crea(perfil) {
-    var estat = { perfil: perfil, a: GTP.creaAleatori(), fulls: [], memoria: new Map() };
+    var estat = { perfil: perfil, a: GTP.creaAleatori(), fulls: [], memoria: new Map(), usats: new Map() };
     preparaUniversos(estat);
     omple(estat);
     return estat;
@@ -301,7 +316,13 @@
     var col = estat.perfil.fulls[f].columnes[c];
     if (canvi.titol !== undefined) col.titol = canvi.titol;
     if (canvi.tipus === undefined) return;
-    if (canvi.tipus !== col.tipus) { col.tipus = canvi.tipus; delete col.relacio; }
+    if (canvi.tipus !== col.tipus) {
+      col.tipus = canvi.tipus;
+      delete col.relacio;
+      delete col.igualA;
+      var mateixaFamilia = function (t) { return t === col.tipus || (t === 'nom' && col.tipus === 'nomComplet') || (t === 'nomComplet' && col.tipus === 'nom'); };
+      col.rol = estat.perfil.fulls[f].columnes.reduce(function (m, x, i) { return i !== c && mateixaFamilia(x.tipus) && x.rol !== undefined ? Math.max(m, x.rol + 1) : m; }, 0);
+    }
     estat.memoria.delete(f + ':' + c);
     estat.fulls[f].valors[c] = generaColumna(estat, f, c);
   }

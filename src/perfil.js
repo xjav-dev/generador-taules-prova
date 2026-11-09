@@ -5,6 +5,7 @@
   var D = GTP.deteccio, esBuit = GTP.esBuit, CAP = D.CAP;
   var MIN_CATEGORIA = 5, MAX_CATEGORIES = 50, LLINDAR_FORMAT = 0.5;
   var AMB_EMPREMTA = { nomComplet: 1, nom: 1, cognoms: 1, dni: 1, correu: 1, telefon: 1, iban: 1, codiPostal: 1, municipi: 1, adreca: 1, patro: 1 };
+  var LLIGATS = { nomComplet: 1, nom: 1, cognoms: 1, dni: 1, correu: 1, telefon: 1, iban: 1, codiPostal: 1, municipi: 1, adreca: 1, patro: 1 };
   var RELACIONABLES = { dni: 1, correu: 1, telefon: 1, iban: 1, nomComplet: 1, patro: 1 };
 
   function normalitza(valor) { return GTP.textCella(valor).normalize('NFC').trim().toLowerCase(); }
@@ -244,7 +245,7 @@
     var numColumnes = senseTitols ? 0 : filaTitols.length;
     files.forEach(function (fila) { if (fila.length > numColumnes) numColumnes = fila.length; });
 
-    var columnes = [], transitoris = [];
+    var columnes = [], transitoris = [], valorsColumnes = [];
     for (var c = 0; c < numColumnes; c++) {
       if (full.columnesAmagades.has(c)) continue;
       var valors = new Array(files.length);
@@ -256,8 +257,39 @@
       resultat.col.id = columnes.length;
       columnes.push(resultat.col);
       transitoris.push(resultat.conjunt);
+      valorsColumnes.push(valors);
     }
+    marcaIguals(columnes, valorsColumnes);
     return { perfil: { nom: full.nom, numFiles: files.length, columnes: columnes }, conjunts: transitoris };
+  }
+
+  function familia(tipus) { return tipus === 'nom' ? 'nomComplet' : tipus; }
+
+  // R15: diverses columnes del mateix tipus són persones diferents, excepte a les files
+  // on l'original tenia el mateix valor. Només es guarda on coincidien, mai el valor.
+  function marcaIguals(columnes, valors) {
+    var rols = {};
+    columnes.forEach(function (col, i) {
+      if (!LLIGATS[col.tipus]) return;
+      var fam = familia(col.tipus), n = col.numFiles, igualA = null, alias = null;
+      for (var j = 0; j < i; j++) {
+        if (!LLIGATS[columnes[j].tipus] || familia(columnes[j].tipus) !== fam) continue;
+        var ambdos = 0, iguals = 0;
+        for (var r = 0; r < n; r++) {
+          if (esBuit(valors[i][r]) || esBuit(valors[j][r])) continue;
+          ambdos++;
+          if (normalitza(valors[i][r]) === normalitza(valors[j][r])) {
+            iguals++;
+            if (!igualA) igualA = new Array(n).fill(-1);
+            if (igualA[r] < 0) igualA[r] = j;
+          }
+        }
+        if (alias === null && ambdos > 0 && iguals / ambdos >= 0.9) alias = j;
+      }
+      if (igualA) col.igualA = igualA;
+      if (alias !== null) col.rol = columnes[alias].rol;
+      else { col.rol = rols[fam] || 0; rols[fam] = col.rol + 1; }
+    });
   }
 
   // R9: una columna els valors de la qual són dins d'una altra pestanya.
