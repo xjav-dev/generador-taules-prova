@@ -4,6 +4,8 @@ Format basat en [Keep a Changelog](https://keepachangelog.com/ca/1.1.0/), amb ve
 
 ## [Sense publicar]
 
+## [1.0.0] · 2026-11-09
+
 ### Afegit
 - Anàlisi de la forma de la taula sense conservar les files originals.
 - Generació de totes les files amb dades inventades.

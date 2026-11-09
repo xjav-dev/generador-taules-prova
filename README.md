@@ -2,7 +2,7 @@
 
 Crea una taula amb la mateixa forma que un full de càlcul real i dades totalment inventades, per fer demostracions i desenvolupaments amb eines d'IA. S'obre al navegador i treballa només a l'ordinador de qui la fa servir.
 
-**Estat:** en proves.
+**Baixada:** a la pàgina de versions (*Releases*) del repositori. Instruccions a [MANUAL.md](MANUAL.md).
 
 Del fitxer original només en surten els títols, els noms de pestanya i les categories repetides. Revisa'ls abans de passar la taula a una eina d'IA.
 
